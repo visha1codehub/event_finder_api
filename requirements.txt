@@ -3,3 +3,4 @@ djangorestframework
 psycopg2
 drf-spectacular
 flake8
+django-import-export
