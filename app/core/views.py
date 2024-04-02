@@ -20,9 +20,9 @@ class EventList(APIView):
             """
             async with httpx.AsyncClient() as client:
                 for event in sdata:
-                    city = event['city_name']
-                    date = event['date']
-                    url = f"someurl"
+                    city = event['city_name']    # noqa
+                    date = event['date']   # noqa
+                    url = f"someurl"     # noqa
                     res = await client.get(url)
                     rdata = res.json()
                     event['weather'] = rdata["weather"]
@@ -46,4 +46,3 @@ class EventList(APIView):
             return srl.data
         except Exception:
             raise Exception
-
