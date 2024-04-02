@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'core',
     'rest_framework',
+    'adrf',
     'drf_spectacular',
     # 'import_export',
 ]
