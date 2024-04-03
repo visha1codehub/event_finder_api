@@ -1,5 +1,6 @@
 [flake8]
 max-line-length = 200
+extend-ignore = E303
 exclude =              ;just like .gitignore
     migrations,
     __pycache__,
