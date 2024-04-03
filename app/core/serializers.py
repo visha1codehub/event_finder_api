@@ -6,7 +6,7 @@ from rest_framework import serializers
 from .models import Event
 
 
-class EventListSerializer(serializers.ModelSerializer):
+class EventSerializer(serializers.ModelSerializer):
     """Serializer for event list."""
     class Meta:
         model = Event

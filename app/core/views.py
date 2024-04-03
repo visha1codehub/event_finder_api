@@ -4,12 +4,12 @@ Views for handle event finder APIs.
 from decimal import Decimal
 import httpx
 from datetime import datetime, timedelta
-from rest_framework.views import APIView
+from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework import status
 from .pagination import CustomPagination
 from .models import Event
-from .serializers import EventListSerializer
+from .serializers import EventSerializer
 from drf_spectacular.utils import (
     extend_schema,
     OpenApiParameter,
@@ -37,8 +37,13 @@ DCODE = "IAKvV2EvJa6Z6dEIUqqd7yGAu7IZ8gaH-a0QO6btjRc1AzFu8Y3IcQ"
         ),
     ]
 )
-class EventAPIView(APIView):
+class EventListView(generics.ListAPIView):
     """API view for event list."""
+
+    serializer_class = EventSerializer
+    queryset = Event
+    pagination_class = CustomPagination
+
     def get(self, request):
         """Get the list of events."""
 
@@ -56,10 +61,10 @@ class EventAPIView(APIView):
 
         current_date = datetime.now().date()
         end_date = current_date + timedelta(days=14)
-        next_14_days_events = Event.objects.filter(date__range=[current_date, end_date])
+        next_14_days_events = self.queryset.objects.filter(date__range=[current_date, end_date])
         paginator = CustomPagination()
         result_page = paginator.paginate_queryset(next_14_days_events, request)
-        serializers = EventListSerializer(result_page, many=True)
+        serializers = self.get_serializer(result_page, many=True)
         data = serializers.data
         # print(type(data), data)
 
@@ -88,8 +93,10 @@ class EventAPIView(APIView):
         return paginator.get_paginated_response(data)
 
 
-
-
+class EventCreateView(generics.CreateAPIView):
+    """View for creating a event."""
+    queryset = Event
+    serializer_class = EventSerializer
 
 
 
