@@ -5,7 +5,6 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    # path("events/find/", views.event_list, name="event-list-api"),
+    path("api/events/", views.EventAPIView.as_view(), name="event-list"),
     # path("events/find/", views.EventList.as_view(), name="async-event-list"),
-    path("events/finds/", views.EventAPIView.as_view(), name="event-list"),
 ]
