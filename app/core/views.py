@@ -1,22 +1,58 @@
 """
 Views for handle event finder APIs.
 """
+from decimal import Decimal
 import httpx
 from datetime import datetime, timedelta
 from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
 from .pagination import CustomPagination
 from .models import Event
 from .serializers import EventListSerializer
+from drf_spectacular.utils import (
+    extend_schema_view,
+    extend_schema,
+    OpenApiParameter,
+    OpenApiTypes,
+)
 
 
 WCODE = "KfQnTWHJbg1giyB_Q9Ih3Xu3L9QOBDTuU5zwqVikZepCAzFut3rqsg"
 DCODE = "IAKvV2EvJa6Z6dEIUqqd7yGAu7IZ8gaH-a0QO6btjRc1AzFu8Y3IcQ"
 
 
+@extend_schema(
+    parameters=[
+        OpenApiParameter(
+            name='latitude',
+            description="User's latitude.",
+            required=True,
+            type=OpenApiTypes.NUMBER,
+        ),
+        OpenApiParameter(
+            name='longitude',
+            description="User's longitude.",
+            required=True,
+            type=OpenApiTypes.NUMBER,
+        ),
+    ]
+)
 class EventAPIView(APIView):
     """API view for event list."""
     def get(self, request):
         """Get the list of events."""
+
+        latitude = request.query_params.get('latitude', None)
+        longitude = request.query_params.get('longitude', None)
+
+        if not all([latitude, longitude]):
+            return Response({"error": "Latitude and Longitude parameters are required."}, status=status.HTTP_400_BAD_REQUEST)
+        try:
+            latitude = Decimal(latitude)
+            longitude = Decimal(longitude)
+        except:
+            return Response({"error": "Latitude and Longitude parameters must be decimal type."}, status=status.HTTP_400_BAD_REQUEST)
 
         current_date = datetime.now().date()
         end_date = current_date + timedelta(days=14)
@@ -31,8 +67,8 @@ class EventAPIView(APIView):
             for event in data:
                 city = event['city_name']
                 date = event['date']
-                latitude1 = 40.7128    # latitude
-                longitude1 = -74.0060    # longitude
+                latitude1 = latitude
+                longitude1 = longitude
                 latitude2 = event['latitude']
                 longitude2 = event['longitude']
                 weather_url = f"https://gg-backend-assignment.azurewebsites.net/api/Weather?code={WCODE}==&city={city}&date={date}"    # noqa
@@ -75,8 +111,7 @@ class EventAPIView(APIView):
 
 # from asgiref.sync import sync_to_async
 # from adrf.views import APIView as aAPIView
-# from rest_framework.response import Response
-# from rest_framework import status
+
 
 # class EventList(aAPIView):
 #     """Asynchronous API view for event list."""
