@@ -2,16 +2,18 @@
 Views for handle event finder APIs.
 """
 import httpx
-from datetime import datetime
+from datetime import datetime, timedelta
 from asgiref.sync import sync_to_async
-from adrf.views import APIView
+from adrf.views import APIView as aAPIView
+from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from .pagination import CustomPagination
 from .models import Event
 from .serializers import EventListSerializer
 
 
-class EventList(APIView):
+class EventList(aAPIView):
     """Asynchronous API view for event list."""
     async def get(self, request):
         """Get the list of events."""
@@ -78,3 +80,31 @@ class EventList(APIView):
             return srl.data
         except Exception:
             raise Exception
+
+
+
+class EventAPIView(APIView):
+    """API view for event list."""
+    def get(self, request):
+        """Get the list of events."""
+
+        events = Event.objects.all()
+        current_date = datetime.now().date()
+        end_date = current_date + timedelta(days=14)
+        next_14_days_events = Event.objects.filter(date__range=[current_date, end_date])
+
+        paginator = CustomPagination()
+        # paginator.page_size = 10
+
+        result_page = paginator.paginate_queryset(next_14_days_events, request)
+
+        serializers = EventListSerializer(result_page, many=True)
+        data = serializers.data
+        # print(type(data), data)
+
+        for item in data:
+            del item['time']
+            del item['latitude']
+            del item['longitude']
+
+        return paginator.get_paginated_response(data)
