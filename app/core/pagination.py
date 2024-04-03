@@ -6,7 +6,6 @@ from rest_framework.response import Response
 
 class CustomPagination(PageNumberPagination):
 
-
     def get_paginated_response(self, data):
         return Response(OrderedDict([
             ('events', data),

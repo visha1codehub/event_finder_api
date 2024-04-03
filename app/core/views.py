@@ -3,11 +3,7 @@ Views for handle event finder APIs.
 """
 import httpx
 from datetime import datetime, timedelta
-from asgiref.sync import sync_to_async
-from adrf.views import APIView as aAPIView
 from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework import status
 from .pagination import CustomPagination
 from .models import Event
 from .serializers import EventListSerializer
@@ -35,12 +31,12 @@ class EventAPIView(APIView):
             for event in data:
                 city = event['city_name']
                 date = event['date']
-                latitude1 = 40.7128    #latitude
-                longitude1 = -74.0060    #longitude
+                latitude1 = 40.7128    # latitude
+                longitude1 = -74.0060    # longitude
                 latitude2 = event['latitude']
                 longitude2 = event['longitude']
                 weather_url = f"https://gg-backend-assignment.azurewebsites.net/api/Weather?code={WCODE}==&city={city}&date={date}"    # noqa
-                distance_url = f"https://gg-backend-assignment.azurewebsites.net/api/Distance?code={DCODE}==&latitude1={latitude1}&longitude1={longitude1}&latitude2={latitude2}&longitude2={longitude2}"
+                distance_url = f"https://gg-backend-assignment.azurewebsites.net/api/Distance?code={DCODE}==&latitude1={latitude1}&longitude1={longitude1}&latitude2={latitude2}&longitude2={longitude2}"   # noqa
                 weather_res = client.get(weather_url)
                 distance_res = client.get(distance_url)
                 weather_res_data = weather_res.json()
@@ -76,6 +72,11 @@ class EventAPIView(APIView):
 
 
 # Asynchronous Try 😀
+
+# from asgiref.sync import sync_to_async
+# from adrf.views import APIView as aAPIView
+# from rest_framework.response import Response
+# from rest_framework import status
 
 # class EventList(aAPIView):
 #     """Asynchronous API view for event list."""
