@@ -16,6 +16,8 @@ from drf_spectacular.utils import (
     OpenApiParameter,
     OpenApiTypes,
 )
+from asgiref.sync import sync_to_async
+from adrf.views import APIView as aAPIView
 
 
 WCODE = "KfQnTWHJbg1giyB_Q9Ih3Xu3L9QOBDTuU5zwqVikZepCAzFut3rqsg"
@@ -98,26 +100,6 @@ class EventCreateView(generics.CreateAPIView):
     queryset = Event
     serializer_class = EventSerializer
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# Asynchronous Try 😀
-
-from asgiref.sync import sync_to_async
-from adrf.views import APIView as aAPIView
 
 
 @extend_schema(
