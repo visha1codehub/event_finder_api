@@ -52,7 +52,7 @@ class EventAPIView(APIView):
             longitude = Decimal(longitude)
         except Exception as ex:
             print(ex)
-            return Response({"error": "Latitude and Longitude parameters must be decimal type."}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"error": "Invalid paramters."}, status=status.HTTP_400_BAD_REQUEST)
 
         current_date = datetime.now().date()
         end_date = current_date + timedelta(days=14)
