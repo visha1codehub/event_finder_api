@@ -69,7 +69,6 @@ class SyncEventListView(generics.ListAPIView):
         result_page = paginator.paginate_queryset(next_14_days_events, request)
         serializers = self.get_serializer(result_page, many=True)
         data = serializers.data
-        # print(type(data), data)
 
         with httpx.Client() as client:
             for event in data:
@@ -92,7 +91,7 @@ class SyncEventListView(generics.ListAPIView):
             del event['time']
             del event['latitude']
             del event['longitude']
-        print(time.perf_counter()-s)
+        print("Sync Time: ", time.perf_counter()-s)
         return paginator.get_paginated_response(data)
 
 
@@ -182,7 +181,7 @@ class AsyncEventListView(aAPIView):
                 del item['time']
                 del item['latitude']
                 del item['longitude']
-            print(time.perf_counter()-s)
+            print("Async Time: ", time.perf_counter()-s)
             return paginator.get_paginated_response(data)
         except httpx.HTTPError as e:
             return Response({"error": str(e)},
