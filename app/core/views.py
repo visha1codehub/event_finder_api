@@ -11,7 +11,6 @@ from .pagination import CustomPagination
 from .models import Event
 from .serializers import EventListSerializer
 from drf_spectacular.utils import (
-    extend_schema_view,
     extend_schema,
     OpenApiParameter,
     OpenApiTypes,
@@ -51,7 +50,8 @@ class EventAPIView(APIView):
         try:
             latitude = Decimal(latitude)
             longitude = Decimal(longitude)
-        except:
+        except Exception as ex:
+            print(ex)
             return Response({"error": "Latitude and Longitude parameters must be decimal type."}, status=status.HTTP_400_BAD_REQUEST)
 
         current_date = datetime.now().date()
