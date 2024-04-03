@@ -65,12 +65,12 @@ class EventAPIView(APIView):
 
         with httpx.Client() as client:
             for event in data:
-                city = event['city_name']
-                date = event['date']
                 latitude1 = latitude
                 longitude1 = longitude
                 latitude2 = event['latitude']
                 longitude2 = event['longitude']
+                city = event['city_name']
+                date = event['date']
                 weather_url = f"https://gg-backend-assignment.azurewebsites.net/api/Weather?code={WCODE}==&city={city}&date={date}"    # noqa
                 distance_url = f"https://gg-backend-assignment.azurewebsites.net/api/Distance?code={DCODE}==&latitude1={latitude1}&longitude1={longitude1}&latitude2={latitude2}&longitude2={longitude2}"   # noqa
                 weather_res = client.get(weather_url)
