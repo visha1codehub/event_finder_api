@@ -16,6 +16,9 @@ from drf_spectacular.utils import (
     OpenApiParameter,
     OpenApiTypes,
 )
+import asyncio
+from asgiref.sync import sync_to_async
+from adrf.views import APIView as aAPIView
 
 
 WCODE = "KfQnTWHJbg1giyB_Q9Ih3Xu3L9QOBDTuU5zwqVikZepCAzFut3rqsg"
@@ -38,7 +41,7 @@ DCODE = "IAKvV2EvJa6Z6dEIUqqd7yGAu7IZ8gaH-a0QO6btjRc1AzFu8Y3IcQ"
         ),
     ]
 )
-class EventListView(generics.ListAPIView):
+class SyncEventListView(generics.ListAPIView):
     """API view for event list."""
     serializer_class = EventSerializer
     queryset = Event
@@ -99,27 +102,6 @@ class EventCreateView(generics.CreateAPIView):
     serializer_class = EventSerializer
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# Asynchronous Try 😀
-
-from asgiref.sync import sync_to_async
-from adrf.views import APIView as aAPIView
-
-
 @extend_schema(
     request=EventSerializer,
     responses=None,
@@ -138,7 +120,7 @@ from adrf.views import APIView as aAPIView
         ),
     ],
 )
-class AsyncEventList(aAPIView):
+class AsyncEventListView(aAPIView):
     """Asynchronous API view for event list."""
     async def get(self, request):
         """Get the list of events."""
@@ -155,11 +137,22 @@ class AsyncEventList(aAPIView):
             print(ex)
             return Response({"error": "Invalid paramters."}, status=status.HTTP_400_BAD_REQUEST)
 
+        async def get_all(url, d_url, event, client):
+            """Async Method for Hit the urls."""
+            weather_res = await client.get(url)
+            weather_res_data = weather_res.json()
+            event['weather'] = weather_res_data["weather"]
+            distance_res = await client.get(d_url)
+            distance_res_data = distance_res.json()
+            event['distance_km'] = distance_res_data["distance"]
+            return event
+
         async def fetch_weather_distance(data):
             """
             Fetch weather for each events from external API asynchronously.
             """
-            with httpx.Client() as client:
+            async with httpx.AsyncClient() as client:
+                tasks = []
                 for event in data:
                     latitude1 = latitude
                     longitude1 = longitude
@@ -167,14 +160,11 @@ class AsyncEventList(aAPIView):
                     longitude2 = event['longitude']
                     city = event['city_name']
                     date = event['date']
-                    weather_url = f"https://gg-backend-assignment.azurewebsites.net/api/Weather?code={WCODE}==&city={city}&date={date}"    # noqa
-                    distance_url = f"https://gg-backend-assignment.azurewebsites.net/api/Distance?code={DCODE}==&latitude1={latitude1}&longitude1={longitude1}&latitude2={latitude2}&longitude2={longitude2}"   # noqa
-                    weather_res = client.get(weather_url)
-                    distance_res = client.get(distance_url)
-                    weather_res_data = weather_res.json()
-                    distance_res_data = distance_res.json()
-                    event['weather'] = weather_res_data["weather"]
-                    event['distance_km'] = distance_res_data["distance"]
+                    w_url = f"https://gg-backend-assignment.azurewebsites.net/api/Weather?code={WCODE}==&city={city}&date={date}"    # noqa
+                    d_url = f"https://gg-backend-assignment.azurewebsites.net/api/Distance?code={DCODE}==&latitude1={latitude1}&longitude1={longitude1}&latitude2={latitude2}&longitude2={longitude2}"   # noqa
+                    tasks.append(asyncio.ensure_future(get_all(w_url, d_url, event, client)))
+                events_data = await asyncio.gather(*tasks)
+                return events_data
 
 
         current_date = datetime.now().date()
@@ -186,7 +176,7 @@ class AsyncEventList(aAPIView):
         data = await self.get_sdata(serializers)
 
         try:
-            await fetch_weather_distance(data)
+            data = await fetch_weather_distance(data)
 
             for item in data:
                 del item['time']
