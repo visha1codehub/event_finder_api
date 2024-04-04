@@ -5,17 +5,21 @@ from decimal import Decimal
 import httpx
 import time
 from datetime import datetime, timedelta
+
 from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework import status
+
 from .pagination import CustomPagination
 from .models import Event
 from .serializers import EventSerializer
+
 from drf_spectacular.utils import (
     extend_schema,
     OpenApiParameter,
     OpenApiTypes,
 )
+
 import asyncio
 from asgiref.sync import sync_to_async
 from adrf.views import APIView as aAPIView
@@ -66,7 +70,8 @@ class SyncEventListView(generics.ListAPIView):
 
         current_date = datetime.now().date()
         end_date = current_date + timedelta(days=14)
-        next_14_days_events = self.queryset.objects.filter(date__range=[current_date, end_date])
+        next_14_days_events = self.queryset.objects.filter(
+            date__range=[current_date, end_date])
         paginator = CustomPagination()
         result_page = paginator.paginate_queryset(next_14_days_events, request)
         serializers = self.get_serializer(result_page, many=True)
@@ -163,10 +168,10 @@ class AsyncEventListView(aAPIView):
                     date = event['date']
                     w_url = f"https://gg-backend-assignment.azurewebsites.net/api/Weather?code={WCODE}==&city={city}&date={date}"    # noqa
                     d_url = f"https://gg-backend-assignment.azurewebsites.net/api/Distance?code={DCODE}==&latitude1={latitude1}&longitude1={longitude1}&latitude2={latitude2}&longitude2={longitude2}"   # noqa
-                    tasks.append(asyncio.ensure_future(get_all(w_url, d_url, event, client)))
+                    tasks.append(asyncio.ensure_future(
+                        get_all(w_url, d_url, event, client)))
                 events_data = await asyncio.gather(*tasks)
                 return events_data
-
 
         current_date = datetime.now().date()
         end_date = current_date + timedelta(days=14)
@@ -238,7 +243,8 @@ class ThreadEventListView(generics.ListAPIView):
 
         current_date = datetime.now().date()
         end_date = current_date + timedelta(days=14)
-        next_14_days_events = self.queryset.objects.filter(date__range=[current_date, end_date])
+        next_14_days_events = self.queryset.objects.filter(
+            date__range=[current_date, end_date])
         paginator = CustomPagination()
         result_page = paginator.paginate_queryset(next_14_days_events, request)
         serializers = self.get_serializer(result_page, many=True)
@@ -270,7 +276,8 @@ class ThreadEventListView(generics.ListAPIView):
                         date = event['date']
                         w_url = f"https://gg-backend-assignment.azurewebsites.net/api/Weather?code={WCODE}==&city={city}&date={date}"    # noqa
                         d_url = f"https://gg-backend-assignment.azurewebsites.net/api/Distance?code={DCODE}==&latitude1={latitude1}&longitude1={longitude1}&latitude2={latitude2}&longitude2={longitude2}"   # noqa
-                        futures.append(executer.submit(get_all, w_url, d_url, event, client))
+                        futures.append(executer.submit(
+                            get_all, w_url, d_url, event, client))
                     events_data = []
                     try:
                         for future in as_completed(futures):
