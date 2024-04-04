@@ -26,6 +26,9 @@ from adrf.views import APIView as aAPIView
 
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
+
 
 WCODE = "KfQnTWHJbg1giyB_Q9Ih3Xu3L9QOBDTuU5zwqVikZepCAzFut3rqsg"
 DCODE = "IAKvV2EvJa6Z6dEIUqqd7yGAu7IZ8gaH-a0QO6btjRc1AzFu8Y3IcQ"
@@ -53,6 +56,7 @@ class SyncEventListView(generics.ListAPIView):
     queryset = Event
     pagination_class = CustomPagination
 
+    @method_decorator(cache_page(60))
     def get(self, request):
         """Get the list of events synchronously."""
         s = time.perf_counter()
@@ -128,6 +132,7 @@ class EventCreateView(generics.CreateAPIView):
 )
 class AsyncEventListView(aAPIView):
     """Asynchronous API view for event list."""
+
     async def get(self, request):
         """Get the list of events asynchronously."""
         s = time.perf_counter()
@@ -226,6 +231,7 @@ class ThreadEventListView(generics.ListAPIView):
     queryset = Event
     pagination_class = CustomPagination
 
+    @method_decorator(cache_page(60))
     def get(self, request):
         """Get the list of events using threads."""
         s = time.perf_counter()

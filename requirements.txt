@@ -5,3 +5,5 @@ drf-spectacular
 flake8
 httpx
 adrf
+django-redis
+django-debug-toolbar

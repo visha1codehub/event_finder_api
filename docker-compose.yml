@@ -19,6 +19,7 @@ services:
       - DB_PASS=changeme
     depends_on:
       - db
+      - redis
 
   db:
     image: postgres:alpine3.19
@@ -28,6 +29,9 @@ services:
       - POSTGRES_DB=devdb
       - POSTGRES_USER=devuser
       - POSTGRES_PASSWORD=changeme
+
+  redis:
+    image: "redis:alpine3.19"
 
 volumes:
   dev-db-data:
