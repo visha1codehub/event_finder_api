@@ -28,7 +28,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
-
+from django.core.cache import cache
 
 WCODE = "KfQnTWHJbg1giyB_Q9Ih3Xu3L9QOBDTuU5zwqVikZepCAzFut3rqsg"
 DCODE = "IAKvV2EvJa6Z6dEIUqqd7yGAu7IZ8gaH-a0QO6btjRc1AzFu8Y3IcQ"
@@ -148,6 +148,13 @@ class AsyncEventListView(aAPIView):
             print(ex)
             return Response({"error": "Invalid paramters."}, status=status.HTTP_400_BAD_REQUEST)
 
+        async def get_cached_data(sdata):
+            data = cache.get(f'{latitude}-{longitude}')
+            if data is None:
+                data = await fetch_weather_distance(sdata)
+                cache.set(f'{latitude}-{longitude}', data, timeout=60)  # Cache for 60 seconds
+            return data
+
         async def get_all(url, d_url, event, client):
             """Async Method for Hit the urls."""
             weather_res = await client.get(url)
@@ -187,7 +194,7 @@ class AsyncEventListView(aAPIView):
         data = await self.get_sdata(serializers)
 
         try:
-            data = await fetch_weather_distance(data)
+            data = await get_cached_data(data)
 
             for item in data:
                 del item['time']
