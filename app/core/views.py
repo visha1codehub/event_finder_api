@@ -149,6 +149,7 @@ class AsyncEventListView(aAPIView):
             return Response({"error": "Invalid paramters."}, status=status.HTTP_400_BAD_REQUEST)
 
         async def get_cached_data(sdata):
+            """Get the cached data if otherwise call fetch api."""
             data = cache.get(f'{latitude}-{longitude}')
             if data is None:
                 data = await fetch_weather_distance(sdata)
