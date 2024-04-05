@@ -56,7 +56,7 @@ class SyncEventListView(generics.ListAPIView):
     queryset = Event
     pagination_class = CustomPagination
 
-    @method_decorator(cache_page(60))
+    @method_decorator(cache_page(60 * 15))
     def get(self, request):
         """Get the list of events synchronously."""
         s = time.perf_counter()
@@ -153,7 +153,7 @@ class AsyncEventListView(aAPIView):
             data = cache.get(f'{latitude}-{longitude}')
             if data is None:
                 data = await fetch_weather_distance(sdata)
-                cache.set(f'{latitude}-{longitude}', data, timeout=60)  # Cache for 60 seconds
+                cache.set(f'{latitude}-{longitude}', data, timeout=60*15)
             return data
 
         async def get_all(url, d_url, event, client):
@@ -239,7 +239,7 @@ class ThreadEventListView(generics.ListAPIView):
     queryset = Event
     pagination_class = CustomPagination
 
-    @method_decorator(cache_page(60))
+    @method_decorator(cache_page(60 * 15))
     def get(self, request):
         """Get the list of events using threads."""
         s = time.perf_counter()
