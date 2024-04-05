@@ -219,7 +219,7 @@ Follow these steps to set up and run the project locally on your machine:
 1. Clone the repository:
 
     ```bash
-    git clone https://github.com/yourusername/event_finder_api.git
+    git clone https://github.com/visha1codehub/event_finder_api.git
     ```
 
 2. Navigate to the project directory:
@@ -230,10 +230,10 @@ Follow these steps to set up and run the project locally on your machine:
 
 ### Running the Server
 
-1. Start the server using npm or yarn:
+1. Start the server using docker-compose:
 
    ```bash
    docker-compose up
    ```
 
-2. Once the server is running, you can access the API endpoints locally at `http://localhost:8000`.
+2. Initially, there will be delay as it build and pull some images. Once the server is running, you can access the API endpoints locally at `http://localhost:8000`.
