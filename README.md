@@ -1,6 +1,6 @@
 # Event Finder API
 
-This is an Event Finder API built with Django, Django Rest Framework, Docker, Docker Compose, PostgreSQL for database storage, and Redis for caching. The application integrates with an external API in three different ways: synchronously, asynchronously, and using threading.
+This is an Event Finder API built with Django, Django Rest Framework, Docker, Docker Compose, PostgreSQL for database storage, and Redis for caching. The application integrates with an external API in three different ways: synchronously, asynchronously, and using python threading.
 
 ## Features
 
@@ -8,6 +8,7 @@ This is an Event Finder API built with Django, Django Rest Framework, Docker, Do
 - **Synchronous External API Integration**: Utilizes synchronous calls to fetch data from an external API.
 - **Asynchronous External API Integration**: Incorporates asynchronous calls to fetch data from an external API, improving performance and scalability.
 - **Threading for External API Calls**: Implements threading to handle external API calls concurrently, enhancing responsiveness.
+- **Caching**: Redis is used for caching to improve the performance of repeated requests.
 
 ## Technologies Used
 
