@@ -190,6 +190,19 @@ Following three ways:
     "previous": null
 }
 ```
+
+### Get OpenAPI Documentation
+
+- **Description:** This is a format for describing RESTful APIs, which includes endpoints, request/response formats, parameters, authentication methods, and more.
+
+- **URL:** `/api/docs`
+
+- **Method:** `GET`
+
+- **Request Body:**
+
+![Alt text](https://github.com/visha1codehub/Learn_Github_Action/blob/master/swagger_screenshot.png?raw=true "Screeshot")
+
 ## Setup Instructions
 
 Follow these steps to set up and run the project locally on your machine:
