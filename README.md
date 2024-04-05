@@ -51,7 +51,7 @@ This is an Event Finder API built with Django, Django Rest Framework, Docker, Do
     "message": "Event created successfully!",
     "status": 201,
     "data": {
-        "event_name": "Sample Event2",
+        "event_name": "Sample Event",
         "city_name": "Sample City",
         "date": "2024-03-01",
         "time": "10:00:00",
