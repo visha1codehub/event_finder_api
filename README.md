@@ -211,7 +211,7 @@ Follow these steps to set up and run the project locally on your machine:
 2. Navigate to the project directory:
 
    ```bash
-   cd your-project
+   cd event_finder_api
    ```
 
 ### Running the Server
