@@ -111,6 +111,25 @@ class EventCreateView(generics.CreateAPIView):
     queryset = Event
     serializer_class = EventSerializer
 
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid():
+            self.perform_create(serializer)
+            success_data = {
+                "success": True,
+                "message": "Event created successfully!",
+                "status": status.HTTP_201_CREATED,
+                "data": serializer.data,
+            }
+            return Response(success_data, status=status.HTTP_201_CREATED)
+        else:
+            failed_data = {
+                "success": False,
+                "status": status.HTTP_400_BAD_REQUEST,
+                "errors": serializer.errors,
+            }
+            return Response(failed_data, status=status.HTTP_400_BAD_REQUEST)
+
 
 @extend_schema(
     request=EventSerializer,
