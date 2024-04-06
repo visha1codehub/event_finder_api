@@ -8,6 +8,7 @@ Moreover, our API leverages another external API to calculate the distance betwe
 
 ## Features
 
+- **Event Creation**: Users can effortlessly create events by supplying the necessary parameters.
 - **Event Search**: Users can search for events based on two required parameters such as latitude and longitude.
 - **Synchronous External API Integration**: Utilizes synchronous calls to fetch data from an external API.
 - **Asynchronous External API Integration**: Incorporates asynchronous calls to fetch data from an external API, improving performance and scalability.
