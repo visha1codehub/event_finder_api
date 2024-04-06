@@ -1,6 +1,10 @@
 # Event Finder API
 
-This is an Event Finder API built with Django, Django Rest Framework, Docker, Docker Compose, PostgreSQL for database storage, and Redis for caching. The application integrates with an external API in three different ways: synchronously, asynchronously, and using python threading.
+This event finder API offers a comprehensive platform for users to discover and engage with various events seamlessly. Each event within the API is richly detailed, featuring key information such as the event name, city, date, time, and precise location coordinates (latitude and longitude).
+
+Enhancing user experience, our API integrates seamlessly with external weather APIs, providing real-time weather updates for each event location.
+
+Moreover, our API leverages another external API to calculate the distance between events and users based on their respective locations.
 
 ## Features
 
@@ -200,7 +204,7 @@ Following three ways:
 
 - **Method:** `GET`
 
-- **Request Body:**
+- **Response:**
 
 ![Alt text](https://github.com/visha1codehub/Learn_Github_Action/blob/master/swagger_screenshot.png?raw=true "Screeshot")
 
