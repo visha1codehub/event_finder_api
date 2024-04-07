@@ -70,6 +70,7 @@ Moreover, our API leverages another external API to calculate the distance betwe
 
 Endpoints allow users to retrieve events based on location and date.
 Following three ways:
+(***I've provided all three methods instead of just the best one to facilitate learning.***)
 
 #### (1) Synchronously
 
