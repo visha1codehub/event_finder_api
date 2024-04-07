@@ -114,6 +114,7 @@ class EventCreateView(generics.CreateAPIView):
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         if serializer.is_valid():
+            cache.clear()
             self.perform_create(serializer)
             success_data = {
                 "success": True,
